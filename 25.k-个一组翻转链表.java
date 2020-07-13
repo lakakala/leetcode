@@ -15,30 +15,50 @@
  */
 class Solution {
     public ListNode reverseKGroup(ListNode head, int k) {
-        ListNode temp = new ListNode(0);
-        temp.next = head;
-        ListNode curr = temp;
-        while(curr.next != null){
-            ListNode first = curr.next;
-            ListNode secondPre = curr;
-
-            for(int i = 0; i < k - 1; i++){
-                secondPre = secondPre.next;
-                if(secondPre.next == null){
-                    return temp.next;
+        ListNode hair = new ListNode(0);
+        hair.next = head;
+        ListNode pre = hair;
+        while(head != null) {
+            ListNode tail = pre;
+            for(int i = 0; i < k; i++) {
+                if(tail.next == null) {
+                    return hair.next;
                 }
+                tail = tail.next;
             }
-            ListNode second = secondPre.next;
-            ListNode secondNext = second.next;
+            ListNode nex = tail.next;
 
-            curr.next = second;
-            second.next = first.next == second ? first : first.next;
-            secondPre.next = first;
-            first.next = secondNext;
+            Pair p = reverse(head, tail);
+            head = p.first;
+            tail = p.second;
 
-            curr = first;
+            pre.next = head;
+            tail.next = nex;
+            head = nex;
+            pre = tail;
         }
-        return temp.next;
+        return hair.next;
+    }
+
+    private Pair reverse(ListNode head, ListNode tail) {
+        ListNode prev = tail.next;
+        ListNode p = head;
+        while(prev != tail) {
+            ListNode nex = p.next;
+            p.next = prev;
+            prev = p;
+            p = nex;
+        }
+        return new Pair(tail, head);
+    }
+}
+
+class Pair {
+    ListNode first;
+    ListNode second;
+    Pair(ListNode first, ListNode second) {
+        this.first = first;
+        this.second = second;
     }
 }
 // @lc code=end
